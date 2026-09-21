@@ -3,7 +3,6 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-
 pasta_downloads = Path.home() / "Downloads"
 
 arquivos_zip = sorted(
@@ -64,25 +63,21 @@ colunas_desejadas = [
 
 colunas_encontradas = [
     coluna for coluna in colunas_desejadas
-    if coluna in dados.columns
-]
+    if coluna in dados.columns]
 
 amostra = dados[colunas_encontradas].sample(
     n=min(20, len(dados)),
-    random_state=42
-)
+    random_state=42)
 
 caminho_saida = (
     Path(__file__).parent
     / "data"
-    / "amostra_acidentes.csv"
-)
+    / "amostra_acidentes.csv")
 
 amostra.to_csv(
     caminho_saida,
     index=False,
-    encoding="utf-8"
-)
+    encoding="utf-8")
 
 print("Amostra criada com sucesso!")
 print(f"Arquivo salvo em: {caminho_saida}")
