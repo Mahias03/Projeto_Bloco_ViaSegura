@@ -111,10 +111,46 @@ st.header("Análise interativa dos acidentes")
 try:
     dados = carregar_dados(caminho_dados)
 
+    # Mantém os dados enviados mesmo quando o Streamlit recarrega a página.
+    if "dados_adicionais" not in st.session_state:
+        st.session_state.dados_adicionais = pd.DataFrame(columns=dados.columns)
+
+    st.subheader("Adicionar dados por arquivo CSV")
+
+    arquivo_enviado = st.file_uploader("Selecione um CSV com a mesma estrutura da base de acidentes.", type="csv")
+
+    if arquivo_enviado is not None:
+        try:
+            novos_dados = pd.read_csv(
+                arquivo_enviado,
+                sep=None,
+                engine="python"
+            )
+
+            colunas_ausentes = [coluna for coluna in dados.columns if coluna not in novos_dados.columns]
+
+            if colunas_ausentes:
+                st.error(f"Colunas ausentes no arquivo: {', '.join(colunas_ausentes)}")
+            elif st.button("Adicionar dados à análise"):
+                novos_dados = novos_dados[dados.columns]
+                st.session_state.dados_adicionais = pd.concat([st.session_state.dados_adicionais, novos_dados], ignore_index=True).drop_duplicates()
+                st.success(f"{len(novos_dados)} registros foram carregados para a sessão.")
+        except Exception as erro:
+            st.error(f"Não foi possível ler o arquivo: {erro}")
+
+    dados_completos = pd.concat([dados, st.session_state.dados_adicionais], ignore_index=True).drop_duplicates()
+
+    st.caption(f"Registros carregados nesta sessão: {len(st.session_state.dados_adicionais)}")
+
+    if not st.session_state.dados_adicionais.empty:
+        if st.button("Remover dados enviados"):
+            st.session_state.dados_adicionais = pd.DataFrame(columns=dados.columns)
+            st.rerun()
+
     # Prepara as opções disponíveis para cada filtro.
-    opcoes_uf = sorted(dados["uf"].dropna().astype(str).unique())
-    opcoes_classificacao = sorted(dados["classificacao_acidente"].dropna().astype(str).unique())
-    opcoes_fase_dia = sorted(dados["fase_dia"].dropna().astype(str).unique())
+    opcoes_uf = sorted(dados_completos["uf"].dropna().astype(str).unique())
+    opcoes_classificacao = sorted(dados_completos["classificacao_acidente"].dropna().astype(str).unique())
+    opcoes_fase_dia = sorted(dados_completos["fase_dia"].dropna().astype(str).unique())
 
     coluna_filtro1, coluna_filtro2, coluna_filtro3 = st.columns(3)
 
@@ -129,7 +165,7 @@ try:
 
     st.caption("Quando nenhuma opção é selecionada, todos os registros são apresentados.")
 
-    dados_filtrados = dados.copy()
+    dados_filtrados = dados_completos.copy()
 
     # Aplica somente os filtros que possuem opções selecionadas.
     if ufs_selecionadas:
@@ -164,7 +200,17 @@ try:
             hide_index=True
         )
 
-    st.caption(f"Exibindo {total_acidentes} de {len(dados)} acidentes disponíveis na amostra.")
+        # Prepara os registros filtrados para download em CSV.
+        csv_filtrado = dados_filtrados.to_csv(index=False).encode("utf-8-sig")
+
+        st.download_button(
+            label="Baixar dados filtrados em CSV",
+            data=csv_filtrado,
+            file_name="acidentes_filtrados.csv",
+            mime="text/csv"
+        )
+
+    st.caption(f"Exibindo {total_acidentes} de {len(dados_completos)} acidentes disponíveis.")
 
 except FileNotFoundError:
     st.error("O arquivo amostra_acidentes.csv não foi encontrado.")
