@@ -1,7 +1,10 @@
-from pathlib import Path
+import re
+import pandas       as pd
+import streamlit    as st
 
-import pandas as pd
-import streamlit as st
+from pathlib        import Path
+from wordcloud      import WordCloud
+from collections    import Counter
 
 st.set_page_config(
     page_title="Via Segura",
@@ -11,6 +14,27 @@ st.set_page_config(
 @st.cache_data
 def carregar_dados(caminho):
     return pd.read_csv(caminho)
+
+@st.cache_data
+def analisar_noticias(dados):
+    texto = " ".join(dados["titulo"].fillna("") + " " + dados["subtitulo"].fillna("")).lower()
+
+    # Separa as palavras e remove termos comuns que não ajudam na análise.
+    palavras = re.findall(r"\b[a-záàâãéêíóôõúç]{4,}\b", texto)
+
+    palavras_ignoradas = {
+        "aos", "como", "com", "das", "dos", "entre", "essa", "esse",
+        "esta", "este", "mais", "nas", "nos", "para", "pela", "pelas",
+        "pelo", "pelos", "por", "porque", "sobre", "suas", "seus",
+        "também", "uma"
+    }
+
+    palavras_filtradas = [palavra for palavra in palavras if palavra not in palavras_ignoradas]
+    frequencias = Counter(palavras_filtradas)
+    tabela_frequencias = pd.DataFrame(frequencias.most_common(10), columns=["palavra", "frequencia"])
+    texto_nuvem = " ".join(palavras_filtradas)
+
+    return texto_nuvem, tabela_frequencias, len(palavras_filtradas), len(frequencias)
 
 caminho_dados = (
     Path(__file__).parent
@@ -201,14 +225,47 @@ try:
             hide_index=True
         )
 
-    st.caption(
-        "Conteúdo coletado do Observatório Nacional de Segurança Viária."
-    )
+        texto_nuvem, tabela_frequencias, total_palavras, palavras_unicas = analisar_noticias(noticias_filtradas)
+
+        st.subheader("Estatísticas do conteúdo coletado")
+
+        coluna_estatistica1, coluna_estatistica2 = st.columns(2)
+        coluna_estatistica1.metric("Palavras analisadas", total_palavras)
+        coluna_estatistica2.metric("Palavras diferentes", palavras_unicas)
+
+        # Gera a nuvem com as palavras encontradas nos títulos e subtítulos.
+        nuvem_palavras = WordCloud(
+            width=1200,
+            height=500,
+            background_color="#0e1117",
+            colormap="Blues",
+            collocations=False
+        ).generate(texto_nuvem)
+
+        coluna_nuvem, coluna_grafico = st.columns([2, 1])
+
+        with coluna_nuvem:
+            st.subheader("Nuvem de palavras")
+
+            st.image(
+                nuvem_palavras.to_array(),
+                caption="Palavras mais presentes nas notícias coletadas.",
+                width="stretch"
+            )
+
+        with coluna_grafico:
+            st.subheader("Palavras mais frequentes")
+
+            st.bar_chart(
+                tabela_frequencias,
+                x="palavra",
+                y="frequencia"
+            )
+
+    st.caption("Conteúdo coletado do Observatório Nacional de Segurança Viária.")
 
 except FileNotFoundError:
-    st.error(
-        "O arquivo noticias_seguranca_viaria.csv não foi encontrado."
-    )
+    st.error("O arquivo noticias_seguranca_viaria.csv não foi encontrado.")
 
 st.header("Projetos e iniciativas semelhantes")
 
