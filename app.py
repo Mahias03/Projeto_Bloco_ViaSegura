@@ -82,24 +82,65 @@ with coluna_ods11:
         """
     )
 
-st.header("Amostra dos dados")
+st.header("Análise interativa dos acidentes")
 
 try:
     dados = carregar_dados(caminho_dados)
 
-    total_acidentes = len(dados)
-    total_mortos = int(pd.to_numeric(dados["mortos"], errors="coerce").fillna(0).sum())
-    total_feridos = int(pd.to_numeric(dados["feridos"], errors="coerce").fillna(0).sum())
+    # Prepara as opções disponíveis para cada filtro.
+    opcoes_uf = sorted(dados["uf"].dropna().astype(str).unique())
+    opcoes_classificacao = sorted(dados["classificacao_acidente"].dropna().astype(str).unique())
+    opcoes_fase_dia = sorted(dados["fase_dia"].dropna().astype(str).unique())
+
+    coluna_filtro1, coluna_filtro2, coluna_filtro3 = st.columns(3)
+
+    with coluna_filtro1:
+        ufs_selecionadas = st.multiselect("Estado", opcoes_uf)
+
+    with coluna_filtro2:
+        classificacoes_selecionadas = st.multiselect("Classificação", opcoes_classificacao)
+
+    with coluna_filtro3:
+        fases_selecionadas = st.multiselect("Fase do dia", opcoes_fase_dia)
+
+    st.caption("Quando nenhuma opção é selecionada, todos os registros são apresentados.")
+
+    dados_filtrados = dados.copy()
+
+    # Aplica somente os filtros que possuem opções selecionadas.
+    if ufs_selecionadas:
+        dados_filtrados = dados_filtrados[dados_filtrados["uf"].astype(str).isin(ufs_selecionadas)]
+
+    if classificacoes_selecionadas:
+        dados_filtrados = dados_filtrados[
+            dados_filtrados["classificacao_acidente"].astype(str).isin(classificacoes_selecionadas)
+        ]
+
+    if fases_selecionadas:
+        dados_filtrados = dados_filtrados[
+            dados_filtrados["fase_dia"].astype(str).isin(fases_selecionadas)
+        ]
+
+    total_acidentes = len(dados_filtrados)
+    total_mortos = int(pd.to_numeric(dados_filtrados["mortos"], errors="coerce").fillna(0).sum())
+    total_feridos = int(pd.to_numeric(dados_filtrados["feridos"], errors="coerce").fillna(0).sum())
 
     coluna1, coluna2, coluna3 = st.columns(3)
 
-    coluna1.metric("Acidentes na amostra", total_acidentes)
-    coluna2.metric("Mortos na amostra", total_mortos)
-    coluna3.metric("Feridos na amostra", total_feridos)
+    coluna1.metric("Acidentes encontrados", total_acidentes)
+    coluna2.metric("Mortos encontrados", total_mortos)
+    coluna3.metric("Feridos encontrados", total_feridos)
 
-    st.dataframe(dados, width="stretch", hide_index=True)
+    if dados_filtrados.empty:
+        st.warning("Nenhum acidente foi encontrado com os filtros selecionados.")
+    else:
+        st.dataframe(
+            dados_filtrados,
+            width="stretch",
+            hide_index=True
+        )
 
-    st.caption("Amostra de 20 acidentes registrados pela PRF em 2025.")
+    st.caption(f"Exibindo {total_acidentes} de {len(dados)} acidentes disponíveis na amostra.")
 
 except FileNotFoundError:
     st.error("O arquivo amostra_acidentes.csv não foi encontrado.")
