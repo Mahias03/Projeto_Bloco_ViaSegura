@@ -3,12 +3,10 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-
 st.set_page_config(
     page_title="Via Segura",
     page_icon="🚦",
-    layout="wide"
-)
+    layout="wide")
 
 @st.cache_data
 def carregar_dados(caminho):
@@ -83,12 +81,8 @@ try:
     dados = carregar_dados(caminho_dados)
 
     total_acidentes = len(dados)
-    total_mortos = int(
-        pd.to_numeric(dados["mortos"], errors="coerce").fillna(0).sum()
-    )
-    total_feridos = int(
-        pd.to_numeric(dados["feridos"], errors="coerce").fillna(0).sum()
-    )
+    total_mortos = int(pd.to_numeric(dados["mortos"], errors="coerce").fillna(0).sum())
+    total_feridos = int(pd.to_numeric(dados["feridos"], errors="coerce").fillna(0).sum())
 
     coluna1, coluna2, coluna3 = st.columns(3)
 
@@ -96,35 +90,28 @@ try:
     coluna2.metric("Mortos na amostra", total_mortos)
     coluna3.metric("Feridos na amostra", total_feridos)
 
-    st.dataframe(
-        dados,
-        width="stretch",
-        hide_index=True
-    )
+    st.dataframe(dados, width="stretch", hide_index=True)
 
-    st.caption(
-        "Amostra de 20 acidentes registrados pela PRF em 2025."
-    )
+    st.caption("Amostra de 20 acidentes registrados pela PRF em 2025.")
 
 except FileNotFoundError:
-    st.error(
-        "O arquivo amostra_acidentes.csv não foi encontrado."
-    )
+    st.error("O arquivo amostra_acidentes.csv não foi encontrado.")
 
-st.header("Links úteis")
+st.header("Projetos e iniciativas semelhantes")
 
 st.markdown(
     """
-    - [Dados Abertos da Polícia Rodoviária Federal](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf)
-    - [Dicionário de Dados de Acidentes da PRF](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dicionario-acidentes)
-    - [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades)
-    - [ODS 3 — Saúde e Bem-Estar](https://brasil.un.org/pt-br/sdgs/3)
-    - [ODS 11 — Cidades e Comunidades Sustentáveis](https://brasil.un.org/pt-br/sdgs/11)
+    - [Indicadores de Segurança Viária — Infra S.A.](https://paineis.infrasa.gov.br/dashboard/9)  
+      Painel que apresenta indicadores e informações relacionadas aos sinistros de trânsito e à segurança viária.
+
+    - [Dados e Dashboards — Observatório Nacional de Segurança Viária](https://www.onsv.org.br/estudos/dados)  
+      Reúne estudos, painéis e projetos de análise de dados sobre acidentes, mortalidade e segurança no trânsito.
+
+    - [Projeto Vida no Trânsito — Ministério da Saúde](https://www.gov.br/saude/pt-br/composicao/svsa/vigilancia-de-doencas-cronicas-nao-transmissiveis/vigilancia-de-violencias-e-acidentes/pvt)  
+      Iniciativa que utiliza dados e evidências para apoiar o planejamento e a avaliação de ações de prevenção de mortes e lesões no trânsito.
     """
 )
 
 st.divider()
 
-st.caption(
-    "Projeto individual desenvolvido por Matheus Afonso."
-)
+st.caption("Projeto individual desenvolvido por Matheus Afonso.")
