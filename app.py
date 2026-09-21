@@ -19,6 +19,13 @@ caminho_dados = (
     / "amostra_acidentes.csv"
 )
 
+caminho_noticias = (
+    Path(__file__).parent
+    / "02_data_ingest_understanding"
+    / "data"
+    / "noticias_seguranca_viaria.csv"
+)
+
 st.title("🚦 Via Segura")
 st.subheader("Análise de acidentes em rodovias federais brasileiras")
 
@@ -96,6 +103,71 @@ try:
 
 except FileNotFoundError:
     st.error("O arquivo amostra_acidentes.csv não foi encontrado.")
+
+st.header("Segurança viária na web")
+
+st.write(
+    """
+    Esta seção apresenta notícias coletadas do site do Observatório Nacional
+    de Segurança Viária por meio de Requests e BeautifulSoup.
+    """
+)
+
+try:
+    noticias = carregar_dados(caminho_noticias)
+
+    busca = st.text_input(
+        "Pesquisar nas notícias",
+        placeholder="Digite uma palavra, como rodovia ou segurança"
+    )
+
+    noticias_filtradas = noticias
+
+    # Pesquisa a palavra informada nos títulos e subtítulos das notícias.
+    if busca:
+        filtro_titulo = noticias["titulo"].str.contains(
+            busca,
+            case=False,
+            na=False,
+            regex=False
+        )
+
+        filtro_subtitulo = noticias["subtitulo"].str.contains(
+            busca,
+            case=False,
+            na=False,
+            regex=False
+        )
+
+        noticias_filtradas = noticias[filtro_titulo | filtro_subtitulo]
+
+    st.metric("Notícias encontradas", len(noticias_filtradas))
+
+    if noticias_filtradas.empty:
+        st.warning("Nenhuma notícia foi encontrada para a pesquisa informada.")
+    else:
+        st.dataframe(
+            noticias_filtradas[
+                ["titulo", "data_publicacao", "link", "fonte"]
+            ],
+            column_config={
+                "titulo": "Título",
+                "data_publicacao": "Data de publicação",
+                "link": st.column_config.LinkColumn("Acessar notícia"),
+                "fonte": "Fonte"
+            },
+            width="stretch",
+            hide_index=True
+        )
+
+    st.caption(
+        "Conteúdo coletado do Observatório Nacional de Segurança Viária."
+    )
+
+except FileNotFoundError:
+    st.error(
+        "O arquivo noticias_seguranca_viaria.csv não foi encontrado."
+    )
 
 st.header("Projetos e iniciativas semelhantes")
 
