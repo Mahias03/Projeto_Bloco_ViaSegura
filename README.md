@@ -1,20 +1,34 @@
 # Via Segura
 
-Projeto individual desenvolvido por Matheus Afonso para o TP1 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
+Projeto individual desenvolvido por Matheus Afonso para o TP2 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
 
 ## Descrição
 
-O Via Segura é uma aplicação demonstrativa desenvolvida em Python com Streamlit. O projeto busca facilitar a consulta e a interpretação dos dados de acidentes registrados em rodovias federais brasileiras.
+O Via Segura é uma aplicação desenvolvida em Python com Streamlit para facilitar a consulta e a interpretação de dados sobre acidentes em rodovias federais brasileiras.
 
-Nesta primeira etapa, a aplicação apresenta o problema de negócio, os objetivos, os ODS relacionados, links úteis, indicadores e uma amostra dos dados da Polícia Rodoviária Federal.
+O projeto apresenta indicadores e filtros interativos, permite o envio e o download de arquivos CSV e reúne notícias sobre segurança viária coletadas da web.
 
 ## Problema de negócio
 
-Os dados de acidentes em rodovias federais estão divididos em arquivos anuais e possuem muitas variáveis. Isso dificulta a consulta e a identificação de padrões por usuários sem conhecimento técnico em análise de dados.
+Os dados de acidentes em rodovias federais possuem muitas variáveis e são disponibilizados em arquivos separados. Isso dificulta a consulta e a identificação de informações por usuários sem conhecimento técnico em análise de dados.
 
 ## Objetivo
 
-Desenvolver uma aplicação em Streamlit para organizar e apresentar dados de acidentes em rodovias federais, permitindo futuramente realizar análises por período, estado, município, rodovia, causa e gravidade.
+Organizar e apresentar dados de acidentes em uma aplicação interativa, permitindo consultar ocorrências, visualizar indicadores e acessar conteúdos relacionados à segurança viária.
+
+## Funcionalidades
+
+- Indicadores de acidentes, pessoas feridas e mortes.
+- Filtros por estado, classificação do acidente e fase do dia.
+- Tabela interativa com os registros filtrados.
+- Upload de arquivos CSV com novos registros.
+- Download dos dados filtrados.
+- Uso de cache para melhorar o desempenho.
+- Uso de estado de sessão para manter os dados enviados.
+- Coleta de notícias com Requests e BeautifulSoup.
+- Pesquisa nos títulos e subtítulos das notícias.
+- Gráfico com as palavras mais frequentes.
+- Nuvem de palavras do conteúdo coletado.
 
 ## ODS relacionados
 
@@ -25,65 +39,36 @@ Desenvolver uma aplicação em Streamlit para organizar e apresentar dados de ac
 
 - [Dados Abertos da Polícia Rodoviária Federal](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf)
 - [Dicionário de Dados de Acidentes da PRF](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dicionario-acidentes)
-- [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades)
+- [Comunicação do Observatório Nacional de Segurança Viária](https://www.onsv.org.br/comunicacao)
+- [API de Localidades do IBGE](https://servicodados.ibge.gov.br/api/docs/localidades) — prevista para uma etapa futura.
 
 ## Estrutura do projeto
 
 - `01_business_understanding`: entendimento do problema e Project Charter.
-- `02_data_ingest_understanding`: fontes, compreensão, preparação e amostra dos dados.
-- `03_modeling`: planejamento da futura etapa de modelagem.
-- `04_deployment`: planejamento da implantação da aplicação.
-- `05_acceptance`: planejamento da validação e entrega final.
-- `app.py`: aplicação demonstrativa em Streamlit.
-- `requirements.txt`: lista das dependências necessárias.
-- `.gitignore`: arquivos e pastas que não devem ser enviados ao GitHub.
+- `02_data_ingest_understanding`: preparação, documentação e armazenamento dos dados.
+- `02_data_ingest_understanding/coletar_noticias.py`: coleta das notícias da web.
+- `02_data_ingest_understanding/criar_amostra.py`: criação da amostra de acidentes.
+- `02_data_ingest_understanding/data`: arquivos CSV utilizados pela aplicação.
+- `03_modeling`: planejamento da etapa de modelagem.
+- `04_deployment`: informações relacionadas à implantação.
+- `05_acceptance`: critérios de validação e aceitação.
+- `app.py`: aplicação principal em Streamlit.
+- `requirements.txt`: dependências do projeto.
+- `.gitignore`: arquivos e pastas ignorados pelo Git.
 
-## Como executar
-
-Abra o terminal na pasta principal do projeto.
-
-### 1. Criar o ambiente virtual
-
-```powershell
-py -m venv .venv
-```
-
-### 2. Ativar o ambiente no Windows
-
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-### 3. Instalar as dependências
-
-```powershell
-python -m pip install -r requirements.txt
-```
-
-### 4. Executar a aplicação
-
-```powershell
-python -m streamlit run app.py
-```
-
-Após a execução, a aplicação será aberta no navegador.
-
-## Tecnologias utilizadas nesta etapa
+## Tecnologias utilizadas
 
 - Python
 - Pandas
 - Streamlit
+- Requests
+- BeautifulSoup
+- WordCloud
 - Git
 - GitHub
 
-## Tecnologias previstas para as próximas etapas
-
-- Requests para coleta de dados por API.
-- BeautifulSoup para web scraping.
-- Plotly para gráficos interativos.
-- Machine Learning para análise da gravidade dos acidentes.
-- Modelo de linguagem para geração de resumos automáticos.
-
 ## Situação atual
 
-O TP1 apresenta uma demonstração inicial da aplicação. A coleta automatizada, o dashboard completo, a modelagem e a integração com uma LLM serão desenvolvidos nas próximas etapas.
+O TP2 possui filtros interativos, indicadores, coleta de conteúdo da web, análise de palavras, cache, estado de sessão e serviço de upload e download de arquivos CSV.
+
+Como melhorias futuras, poderão ser adicionados dados de outros anos, filtros adicionais, integração com o IBGE, mapa interativo, modelos de aprendizado de máquina e geração automática de resumos.
