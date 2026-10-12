@@ -1,6 +1,6 @@
 # Via Segura
 
-Projeto individual desenvolvido por Matheus Afonso para o TP2 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
+Projeto individual desenvolvido por Matheus Afonso para a disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
 
 ## Descrição
 
