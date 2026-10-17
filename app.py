@@ -26,11 +26,18 @@ pagina_noticias = st.Page(
     icon="📰"
 )
 
+pagina_api = st.Page(
+    "pages/integracao_api.py",
+    title="API",
+    icon="🔌"
+)
+
 navegacao = st.navigation(
     [
         pagina_inicio,
         pagina_acidentes,
-        pagina_noticias
+        pagina_noticias,
+        pagina_api
     ]
 )
 
