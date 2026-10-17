@@ -8,7 +8,7 @@ Este documento apresenta as fontes, as principais características e os objetivo
 
 A principal fonte do projeto é a base de dados abertos da Polícia Rodoviária Federal:
 
-https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf
+[Dados Abertos da Polícia Rodoviária Federal](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf)
 
 Os dados são disponibilizados em arquivos CSV e organizados por ocorrência. Cada linha representa um acidente registrado em uma rodovia federal.
 
@@ -32,7 +32,7 @@ Na aplicação, esses dados são utilizados nos filtros, indicadores e na tabela
 
 A segunda fonte utilizada é a página de comunicação do Observatório Nacional de Segurança Viária:
 
-https://www.onsv.org.br/comunicacao
+[Comunicação do Observatório Nacional de Segurança Viária](https://www.onsv.org.br/comunicacao)
 
 As notícias são coletadas com Requests e BeautifulSoup. O script obtém o título, subtítulo, data de publicação, link e fonte das dez primeiras matérias encontradas.
 
@@ -41,6 +41,8 @@ O resultado é armazenado em:
 `02_data_ingest_understanding/data/noticias_seguranca_viaria.csv`
 
 Esses dados são utilizados na pesquisa de notícias, na tabela de conteúdos, no gráfico de frequência e na nuvem de palavras.
+
+O uso de Selenium foi avaliado, mas não foi necessário porque o conteúdo utilizado já está presente no HTML obtido pelo Requests. BeautifulSoup atende à necessidade atual com menor complexidade e tempo de execução. O Selenium poderá ser utilizado futuramente caso uma fonte dependa de conteúdo carregado por JavaScript.
 
 ## 4. Upload e download de dados
 
@@ -71,7 +73,21 @@ A coleta das notícias depende da estrutura da página do Observatório. Caso o 
 
 Os arquivos enviados pelo usuário também precisam possuir as mesmas colunas da base utilizada pelo projeto.
 
-## 7. Possibilidades futuras
+## 7. API do projeto
+
+O projeto possui uma API desenvolvida com FastAPI para disponibilizar os dados em formato JSON.
+
+As principais rotas são:
+
+- `GET /acidentes`: consulta acidentes com filtros opcionais;
+- `POST /acidentes`: recebe e valida um novo registro;
+- `GET /noticias`: consulta as notícias coletadas.
+
+A documentação interativa fica disponível em `/docs`.
+
+Os registros enviados pelo `POST /acidentes` permanecem temporariamente na memória da API. Eles podem ser consultados enquanto o servidor estiver em execução, mas não alteram o CSV oficial da PRF e são removidos quando a API é reiniciada.
+
+## 8. Possibilidades futuras e preparação para LLM
 
 Nas próximas etapas, o projeto poderá incluir:
 
@@ -80,4 +96,9 @@ Nas próximas etapas, o projeto poderá incluir:
 - integração com a API de Localidades do IBGE;
 - mapa interativo utilizando latitude e longitude;
 - novos gráficos e indicadores;
-- geração automática de resumos.
+- resumos dos resultados filtrados;
+- respostas a perguntas sobre os acidentes;
+- resumos das notícias coletadas;
+- geração automática de relatórios.
+
+Os arquivos CSV e as respostas JSON da API deixam os dados organizados para uma futura integração com uma LLM. Essa integração não será implementada no TP3.
