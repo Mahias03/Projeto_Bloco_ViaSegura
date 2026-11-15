@@ -1,7 +1,10 @@
 import pandas as pd
 import streamlit as st
+import requests
 
 from comum import carregar_dados, caminho_dados
+
+URL_API_RESUMO = "http://127.0.0.1:8000/resumo"
 
 st.title("Análise interativa dos acidentes")
 
@@ -91,6 +94,102 @@ try:
     coluna1.metric("Acidentes encontrados", total_acidentes)
     coluna2.metric("Mortos encontrados", total_mortos)
     coluna3.metric("Feridos encontrados", total_feridos)
+
+    # Organiza os valores ausentes antes de contar os registros.
+    estados_registrados = dados_filtrados["uf"].astype("string").fillna("Não informado").str.strip()
+    fases_registradas = dados_filtrados["fase_dia"].astype("string").fillna("Não informado").str.strip()
+
+    estados_registrados = estados_registrados.replace("", "Não informado")
+    fases_registradas = fases_registradas.replace("", "Não informado")
+
+    acidentes_por_estado = {
+        estado: int(total)
+        for estado, total in estados_registrados.value_counts().items()
+    }
+
+    acidentes_por_fase_dia = {
+        fase: int(total)
+        for fase, total in fases_registradas.value_counts().items()
+    }
+
+    st.caption(
+        "Resumo gerado com base nos registros disponíveis e filtros selecionados. "
+        "O texto pode conter erros; confira os indicadores apresentados."
+    )
+
+    dados_resumo = {
+        "estado": list(ufs_selecionadas),
+        "classificacao": list(classificacoes_selecionadas),
+        "fase_dia": list(fases_selecionadas),
+        "acidentes": total_acidentes,
+        "mortos": total_mortos,
+        "feridos": total_feridos,
+        "acidentes_por_estado": acidentes_por_estado,
+        "acidentes_por_fase_dia": acidentes_por_fase_dia
+    }
+
+    # Guarda o resumo durante a sessão enquanto os dados forem os mesmos.
+    if "resumo_ia_acidentes" not in st.session_state:
+        st.session_state.resumo_ia_acidentes = None
+
+    if st.session_state.resumo_ia_acidentes is not None:
+        if st.session_state.resumo_ia_acidentes["dados"] != dados_resumo:
+            st.session_state.resumo_ia_acidentes = None
+
+    if total_acidentes > 0 and st.button("Gerar resumo com IA"):
+        st.session_state.resumo_ia_acidentes = None
+
+        try:
+            with st.spinner("Gerando resumo. Isso pode levar alguns segundos..."):
+                resposta = requests.post(
+                    URL_API_RESUMO,
+                    json=dados_resumo,
+                    timeout=(5, 120)
+                )
+
+                resposta.raise_for_status()
+                resultado = resposta.json()
+
+            if not isinstance(resultado, dict) or not isinstance(resultado.get("resumo"), str):
+                raise ValueError("Resposta da API em formato inesperado.")
+
+            if not resultado["resumo"].strip():
+                raise ValueError("A API retornou um resumo vazio.")
+
+            st.session_state.resumo_ia_acidentes = {
+                "dados": dados_resumo,
+                "texto": resultado["resumo"]
+            }
+
+        except requests.Timeout:
+            st.error(
+                "A API demorou para responder. O processamento pode continuar "
+                "no servidor; aguarde antes de tentar novamente."
+            )
+
+        except requests.ConnectionError:
+            st.error("Não foi possível conectar à API. Verifique se ela está em execução.")
+
+        except requests.HTTPError as erro:
+            codigo = erro.response.status_code if erro.response is not None else "desconhecido"
+
+            if codigo == 503:
+                st.error("O modelo local está indisponível. Verifique o terminal da API.")
+            elif codigo == 422:
+                st.error("A API recusou os dados. Confira os filtros e indicadores.")
+            else:
+                st.error(f"Não foi possível gerar o resumo. Código HTTP: {codigo}.")
+
+        except ValueError:
+            st.error("A API retornou uma resposta em formato inesperado.")
+
+        except requests.RequestException:
+            st.error("Ocorreu um erro na comunicação com a API.")
+
+    if st.session_state.resumo_ia_acidentes is not None:
+        with st.expander("Ver resposta da IA — experimental"):
+            st.warning("O texto pode conter erros ou contradições. Confira os dados calculados.")
+            st.write(st.session_state.resumo_ia_acidentes["texto"])
 
     if dados_filtrados.empty:
         st.warning("Nenhum acidente foi encontrado com os filtros selecionados.")
