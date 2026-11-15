@@ -1,6 +1,6 @@
 # Acceptance
 
-A etapa de aceitação verifica se a aplicação atende aos objetivos definidos para o TP3.
+A etapa de aceitação verifica se a aplicação atende aos objetivos definidos para o TP4.
 
 ## Critérios de aceitação
 
@@ -25,6 +25,10 @@ A aplicação deve:
 - permitir o envio temporário de acidentes pelo método POST;
 - apresentar a documentação automática da API;
 - integrar a API com a aplicação Streamlit;
+- gerar resumos dos dados filtrados utilizando o modelo local;
+- retornar respostas estruturadas na rota de resumo;
+- apresentar mensagens adequadas em caso de dados inválidos ou falha no modelo;
+- informar que o resumo pode conter erros e deve ser conferido.
 - exibir corretamente as fontes e os projetos semelhantes;
 - possuir documentação atualizada.
 
@@ -35,3 +39,5 @@ A aplicação será considerada aceita quando as funcionalidades da interface e 
 Os acidentes enviados para a API devem permanecer disponíveis enquanto o servidor estiver funcionando. A remoção desses registros após o encerramento do servidor é o comportamento esperado nesta versão.
 
 A revisão final também deverá confirmar que o repositório está atualizado no GitHub e não possui alterações pendentes.
+
+Os resumos gerados pela LLM devem ser conferidos com os indicadores e registros apresentados, pois podem conter informações incorretas.

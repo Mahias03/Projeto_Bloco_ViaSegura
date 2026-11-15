@@ -58,7 +58,7 @@ Os principais tratamentos são:
 
 - verificação das colunas dos arquivos enviados;
 - remoção de registros duplicados;
-- conversão das quantidades de mortos e feridos para valores numéricos;
+- conversão das quantidades de mortos e feridos para valores numéricos, considerando valores ausentes ou não numéricos como zero;
 - tratamento de valores ausentes;
 - aplicação de filtros por estado, classificação e fase do dia;
 - separação e contagem das palavras das notícias;
@@ -82,12 +82,21 @@ As principais rotas são:
 - `GET /acidentes`: consulta acidentes com filtros opcionais;
 - `POST /acidentes`: recebe e valida um novo registro;
 - `GET /noticias`: consulta as notícias coletadas.
+- `POST /resumo`: recebe filtros e indicadores e retorna um resumo textual.
 
 A documentação interativa fica disponível em `/docs`.
 
 Os registros enviados pelo `POST /acidentes` permanecem temporariamente na memória da API. Eles podem ser consultados enquanto o servidor estiver em execução, mas não alteram o CSV oficial da PRF e são removidos quando a API é reiniciada.
 
-## 8. Possibilidades futuras
+## 8. Resumo dos acidentes com LLM
+
+A página de acidentes calcula os totais de acidentes, mortos e feridos, além das contagens por estado e fase do dia. Os filtros e os indicadores são enviados em JSON para a rota `POST /resumo`.
+
+A API valida a estrutura e as contagens recebidas. Para resultados com acidentes, o modelo Qwen2.5-1.5B-Instruct, executado localmente, gera um texto curto. Quando não há acidentes, a API retorna uma mensagem pronta sem chamar a LLM.
+
+O texto gerado é experimental e pode conter erros ou contradições. Os indicadores e a tabela devem ser consultados para conferência.
+
+## 9. Possibilidades futuras
 
 Nas próximas etapas, o projeto poderá incluir:
 
@@ -96,15 +105,3 @@ Nas próximas etapas, o projeto poderá incluir:
 - integração com a API de Localidades do IBGE;
 - mapa interativo utilizando latitude e longitude;
 - novos gráficos e indicadores.
-
-### 8.1 Aplicação prioritária de uma LLM
-
-A primeira aplicação prevista para uma LLM será a geração de um resumo textual dos resultados obtidos após a aplicação dos filtros de acidentes.
-
-A entrada será um objeto JSON contendo os filtros selecionados e os indicadores calculados pela aplicação, como quantidade de acidentes, mortos, feridos e principal causa encontrada.
-
-A saída esperada será um texto curto, entre três e cinco frases, explicando os resultados em linguagem acessível. O resumo deverá utilizar somente as informações fornecidas na entrada, indicar os filtros aplicados e evitar conclusões que não possam ser sustentadas pelos dados.
-
-Nesta etapa, a integração com a LLM permanece apenas planejada e não foi implementada.
-
-Os arquivos CSV e as respostas JSON da API deixam os dados organizados para uma futura integração com uma LLM. Essa integração não será implementada no TP3.

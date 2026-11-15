@@ -10,7 +10,7 @@ Uma possibilidade será classificar a gravidade dos acidentes utilizando caracte
 
 A função escolhida para o TP4 é gerar um resumo textual dos acidentes após a aplicação dos filtros.
 
-Os indicadores serão calculados pela aplicação e enviados ao modelo. A LLM será responsável por redigir o resumo, não por calcular os dados.
+Os indicadores e as contagens por estado e fase do dia são calculados pela aplicação e enviados à LLM. O modelo é responsável por redigir o resumo, não por calcular os dados.
 
 ### Decisões iniciais
 
@@ -45,7 +45,7 @@ Os tempos são indicativos e podem variar conforme a máquina e a entrada.
 - No terceiro caso, ambos tiveram dificuldade para expressar que nenhum registro havia sido encontrado com os filtros aplicados. O modelo maior também trocou o sentido da classificação “Sem Vítimas”.
 - Os resultados ainda não são suficientes para considerar qualquer um dos modelos aprovado para todos os cenários.
 
-### Próximos passos
+### Planejamento após a primeira comparação
 
 - Testar uma instrução revisada e casos com múltiplas seleções e filtros vazios.
 - Escolher o modelo considerando fidelidade, clareza, tempo e recursos necessários.
@@ -85,3 +85,15 @@ O modelo Qwen2.5-0.5B apresentou erros na interpretação de alguns filtros e in
 O Qwen2.5-1.5B foi escolhido para o protótipo por apresentar, nesses testes, respostas mais adequadas e menor tempo de geração que o Granite. A avaliação com cinco casos não garante que o modelo sempre produza respostas corretas.
 
 Os indicadores calculados pela aplicação deverão continuar disponíveis separadamente para conferência.
+
+### Implementação no TP4
+
+O modelo escolhido para o protótipo foi o Qwen2.5-1.5B-Instruct, executado localmente na CPU com PyTorch e Transformers. O modelo deve ser baixado previamente e é carregado do cache local.
+
+A aplicação calcula os indicadores e as contagens dos registros filtrados. Esses dados e os filtros selecionados são enviados em JSON para a rota `POST /resumo`, que utiliza a LLM para gerar o texto.
+
+A resposta da API possui estrutura definida com Pydantic. Quando não há acidentes, a API retorna uma mensagem pronta sem chamar a LLM; na interface, o botão de geração não é apresentado.
+
+Durante o desenvolvimento, algumas respostas apresentaram contradições e erros na comparação entre fases do dia. A instrução foi ajustada, mas a geração continua experimental e não há validação automática da veracidade do texto. Os indicadores e a tabela devem ser consultados para conferência.
+
+Os tempos registrados nas comparações foram obtidos com instruções anteriores e podem diferir dos tempos da versão final.

@@ -1,6 +1,6 @@
 # Via Segura
 
-Projeto individual desenvolvido por Matheus Afonso para o TP3 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
+Projeto individual desenvolvido por Matheus Afonso para o TP4 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
 
 ## Descrição
 
@@ -23,6 +23,7 @@ O projeto combina uma interface multipágina criada com Streamlit, dados abertos
 - Consulta de acidentes e notícias por meio de uma API.
 - Envio temporário de novos acidentes para a API.
 - Documentação automática dos endpoints com Swagger.
+- Geração experimental de resumos dos acidentes filtrados com uma LLM local.
 
 ## Páginas da aplicação
 
@@ -43,6 +44,7 @@ A API foi desenvolvida com FastAPI e possui os seguintes endpoints:
 | GET | `/acidentes` | Consultar acidentes e aplicar filtros |
 | POST | `/acidentes` | Enviar temporariamente um novo acidente |
 | GET | `/noticias` | Consultar as notícias coletadas |
+| POST | `/resumo` | Gerar um resumo dos indicadores e filtros recebidos |
 
 A documentação interativa da API fica disponível em:
 
@@ -74,6 +76,7 @@ O uso do Selenium foi avaliado, mas não foi necessário nesta etapa. Ele poder�
 - `requirements.txt`: dependências da aplicação Streamlit.
 - `requirements_api.txt`: dependências necessárias para a API.
 - `.gitignore`: arquivos e pastas que não devem ser enviados ao GitHub.
+- `modelo_llm.py`: carregamento e execução local do modelo de linguagem.
 
 ## Como executar
 
@@ -95,10 +98,19 @@ py -m venv .venv
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m pip install -r requirements_api.txt
 ```
 
-### 4. Executar a API
+### 4. Preparar o modelo local
+
+Na primeira utilização em uma máquina, baixe o modelo:
+
+```powershell
+python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen2.5-1.5B-Instruct')"
+```
+
+O download requer internet. Depois de baixado, o modelo é carregado do cache local e executado na CPU.
+
+### 5. Executar a API
 
 No primeiro terminal:
 
@@ -110,7 +122,7 @@ A API ficará disponível em:
 
 [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
-### 5. Executar a aplicação
+### 6. Executar a aplicação
 
 Mantenha a API funcionando e abra um segundo terminal. Ative novamente o ambiente virtual e execute:
 
@@ -120,7 +132,7 @@ python -m streamlit run app.py
 
 A aplicação será aberta no navegador. Para utilizar a página de integração com a API, os dois serviços precisam estar funcionando simultaneamente.
 
-### 6. Atualizar as notícias
+### 7. Atualizar as notícias
 
 Quando for necessário realizar uma nova coleta:
 
@@ -148,6 +160,9 @@ python 02_data_ingest_understanding/coletar_noticias.py
 - WordCloud
 - Git e GitHub
 - CSV e JSON
+- PyTorch
+- Transformers
+- Hugging Face Hub
 
 ## Limitações atuais
 
@@ -155,7 +170,7 @@ A aplicação utiliza uma amostra de 20 acidentes da PRF para demonstrar suas fu
 
 A API funciona localmente e os dados enviados para ela não possuem armazenamento permanente.
 
-A integração com uma LLM ainda não foi implementada. Os dados estruturados em CSV e JSON preparam o projeto para essa possibilidade em uma etapa futura.
+A LLM é experimental e pode gerar textos incorretos, contraditórios ou incompletos. Os indicadores e a tabela devem ser usados para conferir seus resultados.
 
 ## Melhorias futuras
 
@@ -165,5 +180,4 @@ A integração com uma LLM ainda não foi implementada. Os dados estruturados em
 - Criar um mapa interativo utilizando latitude e longitude.
 - Adicionar armazenamento permanente aos dados recebidos pela API.
 - Desenvolver novos gráficos e indicadores.
-- Utilizar uma LLM para gerar um resumo textual dos indicadores e filtros selecionados, recebendo dados estruturados em JSON como entrada.
 - Publicar a aplicação e a API em serviços de hospedagem.

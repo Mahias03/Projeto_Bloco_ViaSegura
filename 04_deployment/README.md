@@ -42,7 +42,7 @@ Em um segundo terminal, ative novamente o ambiente virtual e inicie a aplicaçã
 python -m streamlit run app.py
 ```
 
-A API e a aplicação Streamlit devem permanecer em execução simultaneamente para utilizar a página de integração.
+A API e a aplicação Streamlit devem permanecer em execução simultaneamente para utilizar a página de integração e gerar resumos com IA.
 
 ## Preparação para implantação
 
@@ -57,3 +57,11 @@ O projeto está preparado para uma futura publicação porque:
 - a aplicação não depende de credenciais ou informações secretas.
 
 Nesta etapa, a aplicação e a API serão validadas localmente. A publicação em serviços externos poderá ser realizada posteriormente.
+
+Antes de utilizar o resumo com IA pela primeira vez, baixe o modelo:
+
+```powershell
+python -c "from huggingface_hub import snapshot_download; snapshot_download('Qwen/Qwen2.5-1.5B-Instruct')"
+```
+
+O download requer internet e espaço em disco. Após o download, o modelo é carregado localmente para gerar os resumos.
