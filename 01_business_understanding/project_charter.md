@@ -179,5 +179,5 @@ A interface, a coleta de dados e a API são mantidas em arquivos separados. O Gi
 - Criar um mapa interativo utilizando latitude e longitude.
 - Desenvolver novos gráficos e indicadores.
 - Armazenar permanentemente os registros enviados pela API.
-- Avaliar uma LLM para gerar resumos, respostas e relatórios.
+- Utilizar uma LLM para gerar um resumo textual dos indicadores e filtros selecionados, recebendo dados estruturados em JSON como entrada.
 - Preparar a implantação pública da aplicação e da API.

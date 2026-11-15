@@ -87,7 +87,7 @@ A documentação interativa fica disponível em `/docs`.
 
 Os registros enviados pelo `POST /acidentes` permanecem temporariamente na memória da API. Eles podem ser consultados enquanto o servidor estiver em execução, mas não alteram o CSV oficial da PRF e são removidos quando a API é reiniciada.
 
-## 8. Possibilidades futuras e preparação para LLM
+## 8. Possibilidades futuras
 
 Nas próximas etapas, o projeto poderá incluir:
 
@@ -95,10 +95,16 @@ Nas próximas etapas, o projeto poderá incluir:
 - filtros por município, rodovia e período;
 - integração com a API de Localidades do IBGE;
 - mapa interativo utilizando latitude e longitude;
-- novos gráficos e indicadores;
-- resumos dos resultados filtrados;
-- respostas a perguntas sobre os acidentes;
-- resumos das notícias coletadas;
-- geração automática de relatórios.
+- novos gráficos e indicadores.
+
+### 8.1 Aplicação prioritária de uma LLM
+
+A primeira aplicação prevista para uma LLM será a geração de um resumo textual dos resultados obtidos após a aplicação dos filtros de acidentes.
+
+A entrada será um objeto JSON contendo os filtros selecionados e os indicadores calculados pela aplicação, como quantidade de acidentes, mortos, feridos e principal causa encontrada.
+
+A saída esperada será um texto curto, entre três e cinco frases, explicando os resultados em linguagem acessível. O resumo deverá utilizar somente as informações fornecidas na entrada, indicar os filtros aplicados e evitar conclusões que não possam ser sustentadas pelos dados.
+
+Nesta etapa, a integração com a LLM permanece apenas planejada e não foi implementada.
 
 Os arquivos CSV e as respostas JSON da API deixam os dados organizados para uma futura integração com uma LLM. Essa integração não será implementada no TP3.

@@ -183,7 +183,7 @@ def consultar_noticias(
 
 @app.post("/acidentes", status_code=201)
 def adicionar_acidente(novo_acidente: NovoAcidente):
-    """Recebe e valida um novo registro de acidente."""
+    """Consulta acidentes com filtros opcionais e inclui registros temporários enviados à API."""
 
     registro = {
         "id": f"API-{len(acidentes_recebidos) + 1}",

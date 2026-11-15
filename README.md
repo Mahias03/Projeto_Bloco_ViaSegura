@@ -165,5 +165,5 @@ A integração com uma LLM ainda não foi implementada. Os dados estruturados em
 - Criar um mapa interativo utilizando latitude e longitude.
 - Adicionar armazenamento permanente aos dados recebidos pela API.
 - Desenvolver novos gráficos e indicadores.
-- Utilizar uma LLM para gerar resumos e auxiliar na interpretação dos resultados.
+- Utilizar uma LLM para gerar um resumo textual dos indicadores e filtros selecionados, recebendo dados estruturados em JSON como entrada.
 - Publicar a aplicação e a API em serviços de hospedagem.
