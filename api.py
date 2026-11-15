@@ -62,6 +62,64 @@ class NovoAcidente(BaseModel):
     mortos: int = Field(default=0, ge=0)
     feridos: int = Field(default=0, ge=0)
 
+class RespostaInicio(BaseModel):
+    projeto: str
+    mensagem: str
+    status: str
+
+
+class AcidenteConsultado(BaseModel):
+    id: int | float | str
+    data_inversa: str
+    dia_semana: str
+    horario: str
+    uf: str
+    br: int | float | str
+    km: int | float | str
+    municipio: str
+    causa_acidente: str
+    tipo_acidente: str
+    classificacao_acidente: str
+    fase_dia: str
+    condicao_metereologica: str
+    tipo_pista: str
+    tracado_via: str
+    pessoas: int | float | str
+    mortos: int | float | str
+    feridos: int | float | str
+    feridos_leves: int | float | str
+    feridos_graves: int | float | str
+    veiculos: int | float | str
+    latitude: int | float | str
+    longitude: int | float | str
+
+
+class RespostaConsultaAcidentes(BaseModel):
+    quantidade: int
+    acidentes: list[AcidenteConsultado]
+
+
+class NoticiaConsultada(BaseModel):
+    titulo: str
+    subtitulo: str
+    data_publicacao: str
+    link: str
+    fonte: str
+
+
+class RespostaConsultaNoticias(BaseModel):
+    quantidade: int
+    noticias: list[NoticiaConsultada]
+
+
+class AcidenteRecebido(NovoAcidente):
+    id: str
+
+
+class RespostaEnvioAcidente(BaseModel):
+    mensagem: str
+    registro: AcidenteRecebido
+
 app = FastAPI(
     title="API Via Segura",
     description="API para consulta e envio de dados relacionados à segurança viária.",
@@ -86,7 +144,7 @@ caminho_noticias = (
 
 acidentes_recebidos: list[dict] = []
 
-@app.get("/")
+@app.get("/", response_model=RespostaInicio)
 def inicio():
     return {
         "projeto": "Via Segura",
@@ -94,7 +152,7 @@ def inicio():
         "status": "online"
     }
 
-@app.get("/acidentes")
+@app.get("/acidentes", response_model=RespostaConsultaAcidentes)
 def consultar_acidentes(
     uf: UnidadeFederativa | None = None,
     classificacao: ClassificacaoAcidente | None = None,
@@ -145,7 +203,7 @@ def consultar_acidentes(
         "acidentes": dados.to_dict(orient="records")
     }
 
-@app.get("/noticias")
+@app.get("/noticias", response_model=RespostaConsultaNoticias)
 def consultar_noticias(
     busca: str | None = None,
     limite: int = Query(
@@ -186,7 +244,7 @@ def consultar_noticias(
         "noticias": noticias.to_dict(orient="records")
     }
 
-@app.post("/acidentes", status_code=201)
+@app.post("/acidentes", status_code=201, response_model=RespostaEnvioAcidente)
 def adicionar_acidente(novo_acidente: NovoAcidente):
     """Recebe um acidente e o mantém temporariamente na memória da API."""
 

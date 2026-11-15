@@ -37,7 +37,7 @@ Desenvolver uma aplicação multipágina para organizar, consultar e apresentar 
 - Disponibilizar consultas aos acidentes e às notícias por uma API.
 - Permitir o envio e a validação de registros por uma rota POST.
 - Utilizar cache para evitar processamentos desnecessários.
-- Preparar os dados para uma futura integração com uma LLM.
+- Gerar resumos experimentais dos acidentes filtrados utilizando uma LLM local.
 
 ## 6. Metas e indicadores de sucesso
 
@@ -55,6 +55,7 @@ Desenvolver uma aplicação multipágina para organizar, consultar e apresentar 
 | Permitir o envio pela API | Rota POST validando e recebendo registros |
 | Integrar API e Streamlit | Consultas e envios realizados pela interface da aplicação |
 | Documentar a API | Rotas apresentadas na documentação automática `/docs` |
+| Gerar resumos experimentais | Rota de resumo integrada à LLM local e à interface |
 | Garantir a reprodução do projeto | Dependências registradas em `requirements.txt` e `requirements_api.txt` |
 
 ## 7. Público-alvo
@@ -92,6 +93,7 @@ O projeto também está relacionado ao ODS 11 por apresentar informações relac
 - Rota POST para validação e envio temporário de registros.
 - Integração da API com a aplicação Streamlit.
 - Controle de versão com Git e GitHub.
+- Geração experimental de resumos pela rota `POST /resumo`, utilizando uma LLM local.
 
 ### Itens fora do escopo atual
 
@@ -103,6 +105,7 @@ O projeto também está relacionado ao ODS 11 por apresentar informações relac
 - Mapa interativo de acidentes.
 - Armazenamento permanente dos registros enviados pela API.
 - Implantação pública da API.
+- Geração de conclusões definitivas ou recomendações sem conferência humana.
 
 Os itens fora do escopo atual poderão ser considerados em etapas futuras.
 
@@ -146,6 +149,9 @@ Fonte prevista para uma etapa futura de padronização e complementação das in
 - GitHub
 - Arquivos CSV e JSON
 - Ambiente virtual Python
+- PyTorch
+- Transformers
+- Hugging Face Hub
 
 ## 13. Principais entregáveis
 
@@ -179,5 +185,5 @@ A interface, a coleta de dados e a API são mantidas em arquivos separados. O Gi
 - Criar um mapa interativo utilizando latitude e longitude.
 - Desenvolver novos gráficos e indicadores.
 - Armazenar permanentemente os registros enviados pela API.
-- Utilizar uma LLM para gerar um resumo textual dos indicadores e filtros selecionados, recebendo dados estruturados em JSON como entrada.
+- Melhorar a avaliação e a confiabilidade dos resumos gerados pela LLM.
 - Preparar a implantação pública da aplicação e da API.
