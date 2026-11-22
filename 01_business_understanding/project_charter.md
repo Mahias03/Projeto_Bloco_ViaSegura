@@ -38,6 +38,7 @@ Desenvolver uma aplicação multipágina para organizar, consultar e apresentar 
 - Permitir o envio e a validação de registros por uma rota POST.
 - Utilizar cache para evitar processamentos desnecessários.
 - Gerar resumos experimentais dos acidentes filtrados utilizando uma LLM local.
+- Gerar resumos experimentais das notícias coletadas utilizando uma LLM local.
 
 ## 6. Metas e indicadores de sucesso
 
@@ -57,6 +58,7 @@ Desenvolver uma aplicação multipágina para organizar, consultar e apresentar 
 | Documentar a API | Rotas apresentadas na documentação automática `/docs` |
 | Gerar resumos experimentais | Rota de resumo integrada à LLM local e à interface |
 | Garantir a reprodução do projeto | Dependências registradas em `requirements.txt` e `requirements_api.txt` |
+| Resumir notícias | Texto coletado enviado à API e resumo apresentado na aplicação |
 
 ## 7. Público-alvo
 
@@ -94,6 +96,9 @@ O projeto também está relacionado ao ODS 11 por apresentar informações relac
 - Integração da API com a aplicação Streamlit.
 - Controle de versão com Git e GitHub.
 - Geração experimental de resumos pela rota `POST /resumo`, utilizando uma LLM local.
+- Extração do texto completo das notícias e geração de resumos pela rota `POST /resumo-noticia`.
+
+Para resumir as notícias, a aplicação envia o texto coletado à LLM com instruções para produzir um resumo curto em português e utilizar apenas informações presentes na matéria. Isso busca facilitar o acesso ao conteúdo sobre segurança viária. Os resultados são experimentais e precisam ser conferidos na fonte original.
 
 ### Itens fora do escopo atual
 
@@ -117,7 +122,7 @@ Fonte principal dos registros de acidentes. O protótipo utiliza uma amostra de 
 
 ### Observatório Nacional de Segurança Viária
 
-Fonte do conteúdo coletado da web. Foram extraídos títulos, subtítulos, datas de publicação, links e identificação da fonte das notícias.
+Fonte do conteúdo coletado da web. São extraídos títulos, subtítulos, datas, links e textos das notícias para consulta, análise e sumarização.
 
 O uso de Selenium foi avaliado, mas não foi necessário porque o conteúdo utilizado está disponível no HTML obtido pelo Requests.
 

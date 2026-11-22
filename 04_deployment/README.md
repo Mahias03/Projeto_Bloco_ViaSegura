@@ -44,6 +44,9 @@ python -m streamlit run app.py
 
 A API e a aplicação Streamlit devem permanecer em execução simultaneamente para utilizar a página de integração e gerar resumos com IA.
 
+Para resumir notícias, a aplicação utiliza o arquivo `02_data_ingest_understanding/data/noticias_com_texto.csv`.
+Na página de notícias, selecione uma matéria e clique em **Gerar resumo da notícia**. A geração é local e pode levar alguns minutos.
+
 ## Preparação para implantação
 
 O projeto está preparado para uma futura publicação porque:

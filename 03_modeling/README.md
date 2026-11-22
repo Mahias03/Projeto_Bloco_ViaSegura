@@ -150,3 +150,19 @@ A resposta da API possui estrutura definida com Pydantic. Quando não há aciden
 Durante o desenvolvimento, algumas respostas apresentaram contradições e erros na comparação entre fases do dia. A instrução foi ajustada, mas a geração continua experimental e não há validação automática da veracidade do texto. Os indicadores e a tabela devem ser consultados para conferência.
 
 Os tempos registrados nas comparações foram obtidos com instruções anteriores e podem diferir dos tempos da versão final.
+
+## TP5 — Sumarização de notícias
+
+O projeto utiliza o Qwen2.5-1.5B-Instruct, executado localmente, para resumir notícias de segurança viária coletadas no site do Observatório Nacional de Segurança Viária.
+
+A notícia selecionada é enviada pela aplicação à rota `POST /resumo-noticia`. O prompt solicita um resumo em português baseado no texto recebido, sem invenção de informações.
+
+### Testes realizados
+
+| Teste | Resultado |
+|---|---|
+| Notícia sobre os portais dos Detrans | Resumo gerado em aproximadamente 2min30s; continha uma interpretação incorreta sobre 19 Detrans |
+| Notícia sobre a LogVale 2026 | Resumo gerado em aproximadamente 1min50s; ideias principais compatíveis com a notícia |
+| Texto com menos de 100 caracteres | Requisição rejeitada com HTTP 422 |
+
+Os tempos foram observados no computador utilizado no desenvolvimento e podem variar. O erro identificado no primeiro teste mostra que a resposta deve ser conferida com a notícia original.

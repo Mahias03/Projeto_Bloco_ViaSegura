@@ -42,6 +42,10 @@ O resultado é armazenado em:
 
 Esses dados são utilizados na pesquisa de notícias, na tabela de conteúdos, no gráfico de frequência e na nuvem de palavras.
 
+Para a sumarização, um segundo script acessa os links das notícias e extrai o texto das matérias. Os textos são armazenados em `02_data_ingest_understanding/data/noticias_com_texto.csv`.
+
+Na aplicação, o usuário seleciona uma notícia e solicita um resumo. O texto coletado é enviado à API e processado localmente pelo modelo Qwen2.5-1.5B-Instruct.
+
 O uso de Selenium foi avaliado, mas não foi necessário porque o conteúdo utilizado já está presente no HTML obtido pelo Requests. BeautifulSoup atende à necessidade atual com menor complexidade e tempo de execução. O Selenium poderá ser utilizado futuramente caso uma fonte dependa de conteúdo carregado por JavaScript.
 
 ## 4. Upload e download de dados
@@ -64,6 +68,8 @@ Os principais tratamentos são:
 - separação e contagem das palavras das notícias;
 - remoção de palavras comuns na análise textual;
 - utilização de cache para evitar processamentos repetidos.
+- extração do texto das notícias a partir das páginas originais;
+- validação do tamanho do texto enviado para sumarização.
 
 ## 6. Qualidade e limitações
 
@@ -72,6 +78,8 @@ Os dados da PRF representam somente acidentes registrados em rodovias federais. 
 A coleta das notícias depende da estrutura da página do Observatório. Caso o site seja alterado, o script poderá precisar de ajustes.
 
 Os arquivos enviados pelo usuário também precisam possuir as mesmas colunas da base utilizada pelo projeto.
+
+Os resumos gerados pela IA podem conter erros e devem ser comparados com a notícia original. Em um dos testes, o modelo informou que 19 Detrans foram avaliados, quando esse número se referia aos que apresentaram melhora. O tempo de geração também pode variar conforme o texto e os recursos do computador.
 
 ## 7. API do projeto
 
@@ -83,6 +91,7 @@ As principais rotas são:
 - `POST /acidentes`: recebe e valida um novo registro;
 - `GET /noticias`: consulta as notícias coletadas.
 - `POST /resumo`: recebe filtros e indicadores e retorna um resumo textual.
+- `POST /resumo-noticia`: recebe o texto de uma notícia e retorna um resumo gerado pela LLM.
 
 A documentação interativa fica disponível em `/docs`.
 

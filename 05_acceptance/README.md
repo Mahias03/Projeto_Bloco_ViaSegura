@@ -1,6 +1,6 @@
 # Acceptance
 
-A etapa de aceitação verifica se a aplicação atende aos objetivos definidos para o TP4.
+A etapa de aceitação verifica se a aplicação atende aos objetivos definidos para o TP5.
 
 ## Critérios de aceitação
 
@@ -31,6 +31,10 @@ A aplicação deve:
 - informar que o resumo pode conter erros e deve ser conferido.
 - exibir corretamente as fontes e os projetos semelhantes;
 - possuir documentação atualizada.
+- apresentar um gráfico de acidentes por fase do dia conforme os filtros;
+- permitir a seleção e a sumarização de uma notícia coletada;
+- rejeitar textos de notícia com menos de 100 caracteres;
+- disponibilizar o link da notícia original para conferência.
 
 ## Resultado esperado
 
@@ -41,3 +45,9 @@ Os acidentes enviados para a API devem permanecer disponíveis enquanto o servid
 A revisão final também deverá confirmar que o repositório está atualizado no GitHub e não possui alterações pendentes.
 
 Os resumos gerados pela LLM devem ser conferidos com os indicadores e registros apresentados, pois podem conter informações incorretas.
+
+## Testes do TP5 realizados
+
+- Duas notícias foram resumidas pela aplicação, com retorno HTTP 200.
+- Um texto com menos de 100 caracteres foi rejeitado com HTTP 422.
+- Um dos resumos apresentou erro na interpretação de um número; por isso, a conferência com a notícia original continua necessária.

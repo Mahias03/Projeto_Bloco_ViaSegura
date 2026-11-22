@@ -1,6 +1,6 @@
 # Via Segura
 
-Projeto individual desenvolvido por Matheus Afonso para o TP4 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
+Projeto individual desenvolvido por Matheus Afonso para o TP5 da disciplina de Projeto de Bloco — Inteligência Artificial Aplicada.
 
 ## Descrição
 
@@ -24,6 +24,8 @@ O projeto combina uma interface multipágina criada com Streamlit, dados abertos
 - Envio temporário de novos acidentes para a API.
 - Documentação automática dos endpoints com Swagger.
 - Geração experimental de resumos dos acidentes filtrados com uma LLM local.
+- Gráfico de acidentes por fase do dia.
+- Resumo experimental de notícias com uma LLM local.
 
 ## Páginas da aplicação
 
@@ -31,7 +33,7 @@ O projeto combina uma interface multipágina criada com Streamlit, dados abertos
 |---|---|
 | Início | Apresentação do projeto, objetivos, ODS e iniciativas semelhantes |
 | Acidentes | Upload, filtros, indicadores, tabela e download dos dados |
-| Notícias | Pesquisa, tabela, estatísticas e nuvem de palavras |
+| Notícias | Pesquisa, tabela, estatísticas, nuvem de palavras e resumo com IA |
 | API | Consulta e envio de dados utilizando a API Via Segura |
 
 ## API Via Segura
@@ -45,6 +47,7 @@ A API foi desenvolvida com FastAPI e possui os seguintes endpoints:
 | POST | `/acidentes` | Enviar temporariamente um novo acidente |
 | GET | `/noticias` | Consultar as notícias coletadas |
 | POST | `/resumo` | Gerar um resumo dos indicadores e filtros recebidos |
+| POST | `/resumo-noticia` | Gerar um resumo do texto de uma notícia |
 
 A documentação interativa da API fica disponível em:
 
@@ -61,6 +64,8 @@ As notícias são coletadas da página de comunicação do Observatório Naciona
 A página disponibiliza o conteúdo diretamente em seu HTML. Por isso, Requests e BeautifulSoup foram suficientes para a coleta.
 
 O uso do Selenium foi avaliado, mas não foi necessário nesta etapa. Ele poderá ser utilizado futuramente caso a fonte escolhida passe a carregar informações dinamicamente com JavaScript.
+
+Os textos das matérias são extraídos para `noticias_com_texto.csv` e utilizados na geração dos resumos.
 
 ## Estrutura do projeto
 
@@ -98,6 +103,7 @@ py -m venv .venv
 
 ```powershell
 python -m pip install -r requirements.txt
+python -m pip install -r requirements_api.txt
 ```
 
 ### 4. Preparar o modelo local
@@ -171,6 +177,8 @@ A aplicação utiliza uma amostra de 20 acidentes da PRF para demonstrar suas fu
 A API funciona localmente e os dados enviados para ela não possuem armazenamento permanente.
 
 A LLM é experimental e pode gerar textos incorretos, contraditórios ou incompletos. Os indicadores e a tabela devem ser usados para conferir seus resultados.
+
+Os resumos das notícias devem ser conferidos com as matérias originais. Nos testes realizados, a geração levou aproximadamente entre 1min50s e 2min30s, podendo variar conforme a notícia e o computador.
 
 ## Melhorias futuras
 
