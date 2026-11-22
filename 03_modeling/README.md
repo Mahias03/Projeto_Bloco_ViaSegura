@@ -86,6 +86,59 @@ O Qwen2.5-1.5B foi escolhido para o protótipo por apresentar, nesses testes, re
 
 Os indicadores calculados pela aplicação deverão continuar disponíveis separadamente para conferência.
 
+### Acessibilidade dos modelos
+
+Os três modelos comparados estão disponíveis no Hugging Face sob licença Apache 2.0:
+
+- [Qwen2.5-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
+- [Qwen2.5-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct)
+- [Granite-3.3-2B-Instruct](https://huggingface.co/ibm-granite/granite-3.3-2b-instruct)
+
+Os modelos podem ser baixados e executados localmente. Após o download dos arquivos e a instalação das dependências, não é necessário utilizar um serviço de IA na nuvem para gerar respostas.
+
+O Qwen2.5-1.5B foi escolhido considerando os resultados da comparação, sua disponibilidade e a possibilidade de execução local. Na aplicação, seus arquivos são carregados do cache local.
+
+### Memória RAM
+
+No teste em CPU, após a geração de um resumo, o processo da API apresentou uso de 3,39 GB de RAM e pico registrado de 3,43 GB. A medição inclui a API e suas bibliotecas, não apenas o modelo.
+
+Como estimativa inicial para executar o projeto, considera-se uma máquina com 8 GB de RAM, deixando espaço também para o sistema e a interface. Esse valor não foi testado como requisito mínimo e pode variar conforme o ambiente e os dados utilizados.
+
+### Evidências dos testes
+
+**Resposta real — HTTP 200**
+
+Foi enviada à rota `POST /resumo` uma requisição com os seguintes dados:
+
+- Estado: RJ.
+- Acidentes: 2.
+- Mortos: 0.
+- Feridos: 3.
+- Fase do dia: 2 acidentes em pleno dia.
+
+Trecho da resposta gerada:
+
+> Foram identificados 2 acidentes no estado do Rio de Janeiro (RJ), com 3 feridos. Nenhum desses acidentes resultou em mortes.
+
+**Dados inconsistentes — HTTP 422**
+
+Foi informado um total de 3 acidentes, enquanto a soma por estado era 2. A API rejeitou a entrada com a mensagem:
+
+```text
+Value error, A soma por estado deve ser igual ao total de acidentes.
+```
+
+**Falhas simuladas — 503 e 500**
+
+Os testes abaixo simularam falhas na função da API, sem realizar requisições HTTP:
+
+```text
+503: O modelo local não está disponível. Verifique o terminal da API.
+500: Não foi possível gerar o resumo. Verifique o terminal da API.
+```
+
+Os resumos da LLM são experimentais e devem ser conferidos com os indicadores e registros apresentados.
+
 ### Implementação no TP4
 
 O modelo escolhido para o protótipo foi o Qwen2.5-1.5B-Instruct, executado localmente na CPU com PyTorch e Transformers. O modelo deve ser baixado previamente e é carregado do cache local.
