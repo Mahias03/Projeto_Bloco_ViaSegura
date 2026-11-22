@@ -112,6 +112,17 @@ try:
         for fase, total in fases_registradas.value_counts().items()
     }
 
+    if total_acidentes > 0:
+        st.subheader("Acidentes por fase do dia")
+
+        dados_grafico = pd.DataFrame({
+            "fase_dia": list(acidentes_por_fase_dia.keys()),
+            "acidentes": list(acidentes_por_fase_dia.values())
+        })
+
+        st.bar_chart(dados_grafico, x="fase_dia", y="acidentes")
+        st.caption("Distribuição dos acidentes nos registros filtrados.")
+
     st.caption(
         "Resumo gerado com base nos registros disponíveis e filtros selecionados. "
         "O texto pode conter erros; confira os indicadores apresentados."

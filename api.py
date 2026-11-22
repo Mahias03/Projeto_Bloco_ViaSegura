@@ -341,3 +341,43 @@ def resumir_acidentes(dados: DadosResumo):
         "dados": dados,
         "resumo": resumo
     }
+
+class DadosNoticia(BaseModel):
+    texto: str = Field(min_length=100, max_length=8000)
+
+
+class RespostaNoticia(BaseModel):
+    tipo_analise: str
+    resumo: str
+
+
+@app.post("/resumo-noticia", response_model=RespostaNoticia)
+def resumir_noticia(dados: DadosNoticia):
+    """Gera um resumo do texto de uma notícia."""
+
+    if len(dados.texto.strip()) < 100:
+        raise HTTPException(status_code=422, detail="O texto da notícia é muito curto.")
+
+    with trava_modelo:
+        try:
+            tokenizador, modelo, _ = obter_recursos_modelo()
+        except Exception:
+            logging.exception("Falha ao carregar o modelo local.")
+            raise HTTPException(status_code=503, detail="O modelo local não está disponível.")
+
+        try:
+            from modelo_llm import gerar_resumo_noticia
+
+            resumo = gerar_resumo_noticia(tokenizador, modelo, dados.texto)
+
+            if not resumo:
+                raise ValueError("O modelo retornou uma resposta vazia.")
+
+        except Exception:
+            logging.exception("Falha ao gerar o resumo da notícia.")
+            raise HTTPException(status_code=500, detail="Não foi possível gerar o resumo da notícia.")
+
+    return {
+        "tipo_analise": "Resumo de notícia",
+        "resumo": resumo
+    }
