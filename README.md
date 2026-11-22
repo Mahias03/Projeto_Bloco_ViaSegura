@@ -140,11 +140,19 @@ A aplicação será aberta no navegador. Para utilizar a página de integração
 
 ### 7. Atualizar as notícias
 
-Quando for necessário realizar uma nova coleta:
+Antes da coleta, faça uma cópia de segurança do arquivo
+`02_data_ingest_understanding/data/noticias_seguranca_viaria.csv`.
+
+Depois, execute os dois scripts, nesta ordem:
 
 ```powershell
-python 02_data_ingest_understanding/coletar_noticias.py
+python 02_data_ingest_understanding\coletar_noticias.py
+python 02_data_ingest_understanding\coletar_textos_noticias.py
 ```
+
+O primeiro atualiza a lista de notícias. O segundo coleta os textos e preserva um backup do arquivo anterior de textos.
+
+Se a coleta dos textos falhar, restaure a cópia da lista anterior para manter os dois arquivos correspondentes. Após a atualização, reinicieo Streamlit para carregar os arquivos atualizados.
 
 ## Fontes de dados
 

@@ -76,6 +76,12 @@ O projeto está relacionado ao ODS 3 por trabalhar com informações sobre morte
 
 O projeto também está relacionado ao ODS 11 por apresentar informações relacionadas à segurança dos sistemas de transporte e dos deslocamentos realizados em rodovias federais.
 
+### Relação com ESG
+
+Na dimensão social, o projeto facilita o acesso a informações sobre acidentes e segurança viária. Na dimensão de governança, reúne dados públicos e notícias que podem apoiar a consulta e a transparência das informações sobre trânsito.
+
+Os gráficos são calculados a partir dos dados disponíveis; a LLM complementa a apresentação com resumos experimentais das notícias. Os resultados devem ser conferidos e não representam, por si só, um impacto comprovado na segurança viária.
+
 ## 9. Escopo do projeto
 
 ### Itens incluídos no escopo atual

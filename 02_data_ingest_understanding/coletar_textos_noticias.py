@@ -1,5 +1,7 @@
 import time
 from pathlib import Path
+import shutil
+from datetime import datetime
 
 import pandas as pd
 import requests
@@ -9,9 +11,6 @@ from bs4 import BeautifulSoup
 pasta_dados = Path(__file__).parent / "data"
 caminho_entrada = pasta_dados / "noticias_seguranca_viaria.csv"
 caminho_saida = pasta_dados / "noticias_com_texto.csv"
-
-if caminho_saida.exists():
-    raise FileExistsError(f"O arquivo de saída já existe: {caminho_saida}")
 
 noticias = pd.read_csv(caminho_entrada)
 cabecalhos = {"User-Agent": "Mozilla/5.0 Projeto acadêmico Via Segura"}
@@ -45,8 +44,23 @@ for numero, url in enumerate(noticias["link"], start=1):
 
 noticias["texto"] = textos_noticias
 
-# Cria um arquivo separado, sem substituir o CSV original.
-noticias.to_csv(caminho_saida, index=False, encoding="utf-8-sig", mode="x")
+# Não substitui o arquivo atual se algum texto não foi coletado.
+if any(not texto.strip() for texto in textos_noticias):
+    raise RuntimeError(
+        "Há notícias sem texto. O arquivo anterior foi preservado."
+    )
+
+# Cria um arquivo temporário antes de substituir o atual.
+identificador = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+caminho_temporario = pasta_dados / f"noticias_com_texto_{identificador}.tmp"
+noticias.to_csv(caminho_temporario, index=False, encoding="utf-8-sig", mode="x")
+
+if caminho_saida.exists():
+    caminho_backup = pasta_dados / f"noticias_com_texto_backup_{identificador}.csv"
+    shutil.copy2(caminho_saida, caminho_backup)
+    print(f"Backup salvo em: {caminho_backup}")
+
+caminho_temporario.replace(caminho_saida)
 
 print(f"\nArquivo salvo em: {caminho_saida}")
 print(f"Notícias com texto: {(noticias['texto'].str.len() > 0).sum()}")

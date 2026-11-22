@@ -25,12 +25,10 @@ st.header("Objetivos do projeto")
 
 st.markdown(
     """
-    - Organizar os dados oficiais de acidentes da PRF.
-    - Apresentar indicadores de acidentes, feridos e mortos.
-    - Permitir análises por período, estado, município e rodovia.
-    - Identificar as principais causas e tipos de acidentes.
-    - Facilitar a interpretação dos resultados por meio de um dashboard.
-    - Futuramente, gerar resumos automáticos utilizando uma LLM.
+    - Apresentar indicadores e filtros para uma amostra de acidentes da PRF.
+    - Facilitar a consulta dos registros por meio de tabelas e gráficos.
+    - Reunir notícias sobre segurança viária coletadas da web.
+    - Gerar resumos experimentais de acidentes e notícias com uma LLM local.
     """
 )
 
@@ -45,6 +43,17 @@ with coluna_ods3:
 with coluna_ods11:
     st.subheader("ODS 11 — Cidades e Comunidades Sustentáveis")
     st.write("Relaciona-se ao desenvolvimento de sistemas de transporte mais seguros e sustentáveis.")
+
+st.header("Relação com ESG")
+
+st.write(
+    """
+    Na dimensão social, o projeto facilita o acesso a informações sobre
+    segurança viária e vítimas de acidentes. Na dimensão de governança,
+    contribui para a consulta de dados públicos e de notícias sobre
+    transparência no trânsito.
+    """
+)
 
 st.header("Projetos e iniciativas semelhantes")
 

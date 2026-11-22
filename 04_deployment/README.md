@@ -20,11 +20,16 @@ python -m pip install -r requirements.txt
 python -m pip install -r requirements_api.txt
 ```
 
-Caso seja necessário atualizar as notícias, execute:
+Caso seja necessário atualizar as notícias, faça antes uma cópia de
+segurança de `noticias_seguranca_viaria.csv`. Em seguida, execute:
 
 ```powershell
 python 02_data_ingest_understanding\coletar_noticias.py
+python 02_data_ingest_understanding\coletar_textos_noticias.py
 ```
+
+Se a coleta dos textos falhar, restaure a cópia da lista anterior.
+Reinicie o Streamlit após a atualização.
 
 Para iniciar a API, execute no primeiro terminal:
 

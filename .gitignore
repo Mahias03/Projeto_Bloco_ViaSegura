@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 .env
+02_data_ingest_understanding/data/noticias_com_texto_backup_*.csv

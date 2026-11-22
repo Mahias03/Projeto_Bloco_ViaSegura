@@ -51,3 +51,4 @@ Os resumos gerados pela LLM devem ser conferidos com os indicadores e registros 
 - Duas notícias foram resumidas pela aplicação, com retorno HTTP 200.
 - Um texto com menos de 100 caracteres foi rejeitado com HTTP 422.
 - Um dos resumos apresentou erro na interpretação de um número; por isso, a conferência com a notícia original continua necessária.
+- Com a API desligada, a aplicação apresentou uma mensagem de erro de conexão.
